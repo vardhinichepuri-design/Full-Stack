@@ -34,12 +34,6 @@ st.markdown("""
     margin-bottom: 25px;
 }
 
-.answer-title {
-    font-size: 25px;
-    font-weight: bold;
-    margin-top: 20px;
-}
-
 </style>
 """, unsafe_allow_html=True)
 
@@ -55,7 +49,7 @@ st.markdown(
 
 st.markdown(
     '<div class="subtitle">'
-    'Understand the same concept in three different ways'
+    'Understand the same concept according to your age'
     '</div>',
     unsafe_allow_html=True
 )
@@ -85,30 +79,61 @@ with st.sidebar:
 
     st.divider()
 
-    st.subheader("📌 Answer Modes")
+    st.subheader("📌 Age-Based Modes")
 
-    st.write("🟢 Beginner Explanation")
-    st.write("🟡 Analogy Explanation")
-    st.write("🔵 Technical Explanation")
+    st.write("📖 5–11 → Story Mode")
+    st.write("🎯 12–20 → Three Ways")
+    st.write("💡 21–35 → Practical Mode")
+    st.write("🌍 36–75 → Real-Time Mode")
 
 
 # ============================================================
-# AGE INPUT
+# USER INFORMATION
 # ============================================================
 
 st.subheader("👤 User Information")
 
 age = st.number_input(
     "Enter your age",
-    min_value=16,
+    min_value=5,
     max_value=75,
     value=20,
     step=1
 )
 
 st.caption(
-    "Age range: 16–75 years"
+    "Age range: 5–75 years"
 )
+
+
+# ============================================================
+# SHOW CURRENT AGE MODE
+# ============================================================
+
+if 5 <= age <= 11:
+
+    st.info(
+        "📖 Story Mode: The concept will be explained as a simple story."
+    )
+
+elif 12 <= age <= 20:
+
+    st.info(
+        "🎯 Three-Way Mode: You will get three different explanations."
+    )
+
+elif 21 <= age <= 35:
+
+    st.info(
+        "💡 Practical Mode: The explanation will focus more on practical uses."
+    )
+
+else:
+
+    st.info(
+        "🌍 Real-Time Mode: The explanation will focus on real-world "
+        "and practical situations."
+    )
 
 
 # ============================================================
@@ -125,12 +150,60 @@ question = st.text_area(
 
 
 # ============================================================
-# CREATE AI PROMPT
+# CREATE AGE-BASED AI PROMPT
 # ============================================================
 
 def create_prompt(age, question):
 
-    prompt = f"""
+    # --------------------------------------------------------
+    # AGE 5–11
+    # --------------------------------------------------------
+
+    if 5 <= age <= 11:
+
+        prompt = f"""
+You are an educational AI assistant for a young child.
+
+The user is {age} years old.
+
+The user's question is:
+
+{question}
+
+Explain the concept as a FUN AND SIMPLE STORY.
+
+Rules:
+
+- Explain it like a story for a young child.
+- Use very simple English.
+- Use short sentences.
+- Use familiar characters.
+- You can use a child, teacher, animal, superhero,
+  family member, or imaginary character.
+- Make the story interesting and easy to follow.
+- Connect the story directly to the actual concept.
+- Use simple examples from school, home, toys, games,
+  friends, or everyday life.
+- Avoid difficult technical words.
+- If a technical word is necessary, explain it simply.
+- Make the concept easy to remember.
+
+IMPORTANT:
+
+Return ONLY the story.
+
+Do not use JSON.
+Do not use a code block.
+Do not add a technical explanation before or after the story.
+"""
+
+    # --------------------------------------------------------
+    # AGE 12–20
+    # --------------------------------------------------------
+
+    elif 12 <= age <= 20:
+
+        prompt = f"""
 You are an educational AI assistant.
 
 The user is {age} years old.
@@ -139,70 +212,150 @@ The user's question is:
 
 {question}
 
-Your task is to explain the SAME concept in exactly THREE
-different ways.
+Explain the SAME concept in exactly THREE different ways.
 
-The three explanations must discuss the SAME concept.
+==================================================
+1. SIMPLE EXPLANATION
+==================================================
 
-========================================
-1. BEGINNER EXPLANATION
-========================================
-
-Explain the concept for a complete beginner.
+Explain the concept in simple language suitable for
+a school or college student.
 
 Rules:
-- Use very simple English.
-- Use short and clear sentences.
-- Avoid difficult technical words.
+
+- Use clear English.
 - Explain the basic meaning first.
-- Make it easy for someone with no background knowledge.
-- Give a simple example if useful.
+- Avoid unnecessary difficult words.
+- Give a simple example.
 
-========================================
+==================================================
 2. ANALOGY EXPLANATION
-========================================
+==================================================
 
-Explain the SAME concept using a real-world analogy.
+Explain the SAME concept using a familiar real-world analogy.
 
 Rules:
-- Use a familiar real-life situation.
-- Make the analogy easy to understand.
+
+- Use an easy real-life situation.
 - Clearly connect the analogy to the actual concept.
-- Do not use an unrelated example.
-- The analogy should help the user remember the concept.
+- Make it easy to remember.
 
-========================================
-3. TECHNICAL EXPLANATION
-========================================
+==================================================
+3. STUDENT EXPLANATION
+==================================================
 
-Explain the SAME concept at a technical level.
+Explain the SAME concept at a moderate technical level.
 
 Rules:
-- Use correct technical terminology.
-- Explain how it works.
-- Explain important components or mechanisms.
-- Give a technical example when appropriate.
-- Provide enough detail for a college student.
 
-========================================
+- Use correct technical terms.
+- Explain how it works.
+- Give a relevant example.
+- Keep it understandable for a student.
+- Do not make it unnecessarily advanced.
 
 IMPORTANT:
 
-Return the answer using EXACTLY these headings:
+Return EXACTLY these headings:
 
-BEGINNER:
+SIMPLE:
 ANALOGY:
-TECHNICAL:
+STUDENT:
 
-Do NOT use JSON.
+Do not use JSON.
+Do not use a code block.
+Do not add anything before SIMPLE.
+Do not add anything after STUDENT.
+"""
 
-Do NOT put the answer inside a code block.
+    # --------------------------------------------------------
+    # AGE 21–35
+    # --------------------------------------------------------
 
-Do NOT add any explanation before BEGINNER.
+    elif 21 <= age <= 35:
 
-Do NOT add any explanation after TECHNICAL.
+        prompt = f"""
+You are an educational AI assistant.
 
-The three sections must be clearly separated.
+The user is {age} years old.
+
+The user's question is:
+
+{question}
+
+Explain the concept mainly from a PRACTICAL perspective.
+
+Rules:
+
+- Start with a clear definition.
+- Focus more on practical understanding than theory.
+- Explain where the concept is used in real life.
+- Give realistic practical examples.
+- Explain how a person can encounter or use this concept.
+- Include workplace, technology, business, or daily-life
+  examples when relevant.
+- Explain the practical importance.
+- Mention advantages when relevant.
+- Use moderate technical terminology where useful.
+- Keep the explanation clear and useful.
+
+IMPORTANT:
+
+Use EXACTLY these headings:
+
+WHAT IT IS:
+PRACTICAL EXAMPLE:
+REAL-WORLD USE:
+WHY IT MATTERS:
+
+Do not use JSON.
+Do not use a code block.
+"""
+
+    # --------------------------------------------------------
+    # AGE 36–75
+    # --------------------------------------------------------
+
+    else:
+
+        prompt = f"""
+You are an educational AI assistant.
+
+The user is {age} years old.
+
+The user's question is:
+
+{question}
+
+Explain the concept using REAL-TIME and PRACTICAL
+real-world situations.
+
+Rules:
+
+- Start with a clear explanation of the concept.
+- Focus strongly on real-world applications.
+- Explain how this concept is used in everyday life.
+- Explain how it is used in work or business when relevant.
+- Give realistic practical examples.
+- Explain situations where the user may actually encounter
+  this concept.
+- Explain benefits and importance.
+- Avoid unnecessary academic theory.
+- Use professional but easy-to-understand language.
+- Use technical terminology only when it helps understanding.
+
+IMPORTANT:
+
+Use EXACTLY these headings:
+
+CONCEPT:
+REAL-TIME EXAMPLE:
+PRACTICAL APPLICATION:
+BENEFITS:
+REAL-WORLD IMPORTANCE:
+
+Do not use JSON.
+Do not use a code block.
 """
 
     return prompt
@@ -233,71 +386,11 @@ def generate_answer(age, question, model):
 
 
 # ============================================================
-# SPLIT AI RESPONSE INTO THREE SECTIONS
-# ============================================================
-
-def split_answers(result):
-
-    beginner = ""
-    analogy = ""
-    technical = ""
-
-    # Find sections
-
-    if "ANALOGY:" in result:
-
-        parts = result.split(
-            "ANALOGY:",
-            1
-        )
-
-        beginner = parts[0]
-
-        remaining = parts[1]
-
-    else:
-
-        beginner = result
-        remaining = ""
-
-
-    if "TECHNICAL:" in remaining:
-
-        parts = remaining.split(
-            "TECHNICAL:",
-            1
-        )
-
-        analogy = parts[0]
-        technical = parts[1]
-
-    else:
-
-        analogy = remaining
-        technical = ""
-
-
-    # Remove headings
-
-    beginner = beginner.replace(
-        "BEGINNER:",
-        ""
-    ).strip()
-
-    analogy = analogy.strip()
-
-    technical = technical.strip()
-
-
-    return beginner, analogy, technical
-
-
-# ============================================================
 # GENERATE BUTTON
 # ============================================================
 
 if st.button(
-    "✨ Generate 3 Explanations",
+    "✨ Generate Explanation",
     use_container_width=True
 ):
 
@@ -312,7 +405,7 @@ if st.button(
         try:
 
             with st.spinner(
-                "🤖 AI is preparing your three explanations..."
+                "🤖 AI is preparing your age-based explanation..."
             ):
 
                 result = generate_answer(
@@ -321,20 +414,11 @@ if st.button(
                     model
                 )
 
-            # Split response
+            # Store response
 
-            beginner, analogy, technical = split_answers(
-                result
-            )
-
-            # Store answers
-
-            st.session_state["beginner"] = beginner
-            st.session_state["analogy"] = analogy
-            st.session_state["technical"] = technical
+            st.session_state["answer"] = result
             st.session_state["question"] = question
             st.session_state["age"] = age
-
 
         except Exception as e:
 
@@ -353,55 +437,149 @@ if st.button(
 
 
 # ============================================================
-# DISPLAY THREE ANSWERS
+# DISPLAY AI RESPONSE
 # ============================================================
 
-if "beginner" in st.session_state:
+if "answer" in st.session_state:
 
     st.divider()
 
     st.subheader(
-        "🤖 AI Explanations"
+        "🤖 AI Explanation"
     )
+
+    current_age = st.session_state["age"]
+    answer = st.session_state["answer"]
 
 
     # ========================================================
-    # BEGINNER
+    # AGE 5–11
     # ========================================================
 
-    st.markdown(
-        "### 🟢 Beginner Explanation"
-    )
+    if 5 <= current_age <= 11:
 
-    st.info(
-        st.session_state["beginner"]
-    )
+        st.markdown(
+            "### 📖 Story Explanation"
+        )
 
-
-    # ========================================================
-    # ANALOGY
-    # ========================================================
-
-    st.markdown(
-        "### 🟡 Analogy Explanation"
-    )
-
-    st.warning(
-        st.session_state["analogy"]
-    )
+        st.info(
+            answer
+        )
 
 
     # ========================================================
-    # TECHNICAL
+    # AGE 12–20
     # ========================================================
 
-    st.markdown(
-        "### 🔵 Technical Explanation"
-    )
+    elif 12 <= current_age <= 20:
 
-    st.success(
-        st.session_state["technical"]
-    )
+        st.markdown(
+            "### 🎯 Three Different Ways"
+        )
+
+        # Find SIMPLE section
+
+        simple = ""
+        analogy = ""
+        student = ""
+
+        if "ANALOGY:" in answer:
+
+            parts = answer.split(
+                "ANALOGY:",
+                1
+            )
+
+            simple = parts[0]
+
+            remaining = parts[1]
+
+        else:
+
+            simple = answer
+            remaining = ""
+
+
+        if "STUDENT:" in remaining:
+
+            parts = remaining.split(
+                "STUDENT:",
+                1
+            )
+
+            analogy = parts[0]
+            student = parts[1]
+
+        else:
+
+            analogy = remaining
+            student = ""
+
+
+        simple = simple.replace(
+            "SIMPLE:",
+            ""
+        ).strip()
+
+        analogy = analogy.strip()
+        student = student.strip()
+
+
+        st.markdown(
+            "### 🟢 Simple Explanation"
+        )
+
+        st.info(
+            simple
+        )
+
+
+        st.markdown(
+            "### 🟡 Analogy Explanation"
+        )
+
+        st.warning(
+            analogy
+        )
+
+
+        st.markdown(
+            "### 🔵 Student Explanation"
+        )
+
+        st.success(
+            student
+        )
+
+
+    # ========================================================
+    # AGE 21–35
+    # ========================================================
+
+    elif 21 <= current_age <= 35:
+
+        st.markdown(
+            "### 💡 Practical Explanation"
+        )
+
+        st.info(
+            answer
+        )
+
+
+    # ========================================================
+    # AGE 36–75
+    # ========================================================
+
+    else:
+
+        st.markdown(
+            "### 🌍 Real-Time & Practical Explanation"
+        )
+
+        st.success(
+            answer
+        )
 
 
     # ========================================================
@@ -421,24 +599,10 @@ Question:
 
 
 ==================================================
-BEGINNER EXPLANATION
+AI EXPLANATION
 ==================================================
 
-{st.session_state["beginner"]}
-
-
-==================================================
-ANALOGY EXPLANATION
-==================================================
-
-{st.session_state["analogy"]}
-
-
-==================================================
-TECHNICAL EXPLANATION
-==================================================
-
-{st.session_state["technical"]}
+{st.session_state["answer"]}
 """
 
 
